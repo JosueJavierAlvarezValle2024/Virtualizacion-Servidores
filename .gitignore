@@ -1,0 +1,22 @@
+# Videos de las tareas (se suben a YouTube, no a git)
+*.mp4
+*.mkv
+*.mov
+*.avi
+
+# Discos y appliances de maquinas virtuales (pesan GB)
+*.vdi
+*.vmdk
+*.qcow2
+*.img
+*.iso
+*.ova
+.vagrant/
+
+# Preferencias locales de Claude (no son parte de la entrega)
+CLAUDE.md
+
+# Temporales de Office y del sistema
+~$*
+*.tmp
+Thumbs.db
