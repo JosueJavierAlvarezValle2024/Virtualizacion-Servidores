@@ -23,15 +23,16 @@ leer()   { [ -r "$1" ] && cat "$1" 2>/dev/null || echo "(no disponible)"; }
 
   titulo "1. ¿Estoy en una máquina virtual?"
   dato "systemd-detect-virt:" "$(systemd-detect-virt 2>/dev/null || echo none)"
-  dato "¿Contenedor?:" "$(systemd-detect-virt -c 2>/dev/null || echo none)"
+  dato "¿Contenedor?:" "$(systemd-detect-virt -c 2>/dev/null | head -n1)"
   dato "Fabricante (DMI):" "$(leer /sys/class/dmi/id/sys_vendor)"
   dato "Producto (DMI):" "$(leer /sys/class/dmi/id/product_name)"
 
   titulo "2. CPU virtual (vCPU)"
-  dato "Modelo:" "$(lscpu | sed -n 's/^Model name: *//p')"
+  # LC_ALL=C: lscpu sale en español en la VM y los nombres de campo cambiarian
+  dato "Modelo:" "$(LC_ALL=C lscpu | sed -n 's/^Model name: *//p')"
   dato "vCPU asignadas:" "$(nproc)"
-  dato "Fabricante del hipervisor:" "$(lscpu | sed -n 's/^Hypervisor vendor: *//p')"
-  dato "Tipo de virtualización:" "$(lscpu | sed -n 's/^Virtualization type: *//p')"
+  dato "Fabricante del hipervisor:" "$(LC_ALL=C lscpu | sed -n 's/^Hypervisor vendor: *//p')"
+  dato "Tipo de virtualización:" "$(LC_ALL=C lscpu | sed -n 's/^Virtualization type: *//p')"
   if grep -m1 -w hypervisor /proc/cpuinfo > /dev/null; then
     dato "Bandera 'hypervisor':" "SÍ (la CPU avisa que hay un hipervisor debajo)"
   else
@@ -61,7 +62,8 @@ leer()   { [ -r "$1" ] && cat "$1" 2>/dev/null || echo "(no disponible)"; }
   fi
 
   titulo "5. Disco virtual"
-  lsblk -d -o NAME,SIZE,MODEL,ROTA,TYPE | sed 's/^/  /'
+  # -e 7 oculta los dispositivos loop (paquetes snap), que no son discos virtuales
+  lsblk -d -e 7 -o NAME,SIZE,MODEL,ROTA,TYPE | sed 's/^/  /'
 
   titulo "6. Red virtual (driver de cada interfaz)"
   for n in /sys/class/net/*; do
