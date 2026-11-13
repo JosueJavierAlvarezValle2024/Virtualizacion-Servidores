@@ -2,7 +2,7 @@
 
 **Materia:** Administración de Servidores · **Unidad 5: Virtualización**
 **Alumno:** Josué Javier Álvarez Valle · ITS Monclova
-**Laboratorio de referencia:** Windows 11 Home + VirtualBox 7.1.6 · Intel Core i3-1115G4 · 7.7 GB RAM
+**Laboratorio de referencia:** Windows 11 Home + VirtualBox 7.2.20 · Intel Core i3-1115G4 · 7.7 GB RAM
 
 Este documento explica qué es la virtualización, clasifica los hipervisores en **Tipo 1 (bare-metal)**, **Tipo 2 (hosted)** y **contenedores de sistema operativo**, y los compara en cuatro aspectos técnicos: **sobrecarga (overhead), administración de memoria, almacenamiento compartido y rendimiento de red**. Al final se indica qué opción conviene según el tamaño de la organización.
 
