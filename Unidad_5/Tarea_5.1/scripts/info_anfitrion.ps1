@@ -61,5 +61,7 @@ $reporte = & {
   }
 }
 
-$reporte | Tee-Object -FilePath $salida
+# Se guarda en UTF-8 (Tee-Object de PowerShell 5.1 escribe UTF-16 y GitHub lo ve como binario)
+$reporte | Out-File -FilePath $salida -Encoding utf8
+$reporte
 "`nEvidencia guardada en: $salida"

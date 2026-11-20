@@ -1,12 +1,12 @@
 Detección de virtualización · Xubuntuu · 2026-11-12 21:52
 
-[1;34m== 1. ¿Estoy en una máquina virtual? ==[0m
+== 1. ¿Estoy en una máquina virtual? ==
   systemd-detect-virt:             oracle
   ¿Contenedor?:                   none
   Fabricante (DMI):                innotek GmbH
   Producto (DMI):                  VirtualBox
 
-[1;34m== 2. CPU virtual (vCPU) ==[0m
+== 2. CPU virtual (vCPU) ==
   Modelo:                          11th Gen Intel(R) Core(TM) i3-1115G4 @ 3.00GHz
   vCPU asignadas:                  2
   Fabricante del hipervisor:       KVM
@@ -14,20 +14,20 @@ Detección de virtualización · Xubuntuu · 2026-11-12 21:52
   Bandera 'hypervisor':            SÍ (la CPU avisa que hay un hipervisor debajo)
   VT-x/AMD-V dentro de la VM:      no (sin virtualización anidada)
 
-[1;34m== 3. Hardware emulado o paravirtualizado (PCI) ==[0m
+== 3. Hardware emulado o paravirtualizado (PCI) ==
   00:02.0 VGA compatible controller: VMware SVGA II Adapter
   00:03.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)
   00:04.0 System peripheral: InnoTek Systemberatung GmbH VirtualBox Guest Service
   00:08.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 02)
   00:0d.0 SATA controller: Intel Corporation 82801HM/HEM (ICH8M/ICH8M-E) SATA Controller [AHCI mode] (rev 02)
 
-[1;34m== 4. Memoria ==[0m
+== 4. Memoria ==
                  total       usado       libre  compartido   búf/caché  disponible
   Mem:           3,5Gi       1,2Gi       144Mi        12Mi       2,5Gi       2,3Gi
   Inter:            0B          0B          0B
   Driver vboxguest:                cargado (permite el globo de memoria / ballooning)
 
-[1;34m== 5. Disco virtual ==[0m
+== 5. Disco virtual ==
   NAME  SIZE MODEL         ROTA TYPE
   sda    25G VBOX HARDDISK    1 disk
   sdb     2G VBOX HARDDISK    1 disk
@@ -37,15 +37,15 @@ Detección de virtualización · Xubuntuu · 2026-11-12 21:52
   sdf     1G VBOX HARDDISK    1 disk
   sr0  1024M VBOX CD-ROM      0 rom
 
-[1;34m== 6. Red virtual (driver de cada interfaz) ==[0m
+== 6. Red virtual (driver de cada interfaz) ==
   enp0s3                           driver=e1000  mac=08:00:27:87:3e:b4  ip=10.0.2.15/24
   enp0s8                           driver=e1000  mac=08:00:27:d8:08:88  ip=192.168.50.10/24
 
-[1;34m== 7. Reloj (paravirtualización) ==[0m
+== 7. Reloj (paravirtualización) ==
   Fuente de reloj:                 kvm-clock
   Disponibles:                     kvm-clock acpi_pm 
 
-[1;34m== 8. Mensajes del kernel sobre el hipervisor ==[0m
+== 8. Mensajes del kernel sobre el hipervisor ==
   nov 12 21:33:29 Xubuntuu kernel: Hypervisor detected: KVM
   nov 12 21:33:29 Xubuntuu kernel: Booting paravirtualized kernel on KVM
 

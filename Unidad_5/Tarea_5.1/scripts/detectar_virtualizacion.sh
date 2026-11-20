@@ -13,6 +13,7 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 EVID="$DIR/../evidencias"
 mkdir -p "$EVID"
 SALIDA="$EVID/virtualizacion_$(hostname).txt"
+TMP="$(mktemp)"
 
 titulo() { printf '\n\033[1;34m== %s ==\033[0m\n' "$1"; }
 dato()   { printf '  %-32s %s\n' "$1" "$2"; }
@@ -81,6 +82,10 @@ leer()   { [ -r "$1" ] && cat "$1" 2>/dev/null || echo "(no disponible)"; }
   titulo "8. Mensajes del kernel sobre el hipervisor"
   journalctl -k -b 2>/dev/null | grep -i -E 'hypervisor detected|booting paravirtualized' | head -n 3 | sed 's/^/  /'
   echo
-} 2>&1 | tee "$SALIDA"
+} 2>&1 | tee "$TMP"
+
+# En pantalla salen con colores; en el archivo se quitan los codigos de color
+sed 's/\x1b\[[0-9;]*m//g' "$TMP" > "$SALIDA"
+rm -f "$TMP"
 
 echo "Evidencia guardada en: $SALIDA"
