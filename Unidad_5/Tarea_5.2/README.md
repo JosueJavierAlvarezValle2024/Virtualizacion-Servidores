@@ -91,6 +91,7 @@ Unidad_5/Tarea_5.2/
 │   ├── 01_recursos_dinamicos.ps1    # vCPU y RAM (en caliente y con reinicio)
 │   ├── 02_disco_fino.ps1            # capacidad contra espacio real del disco
 │   ├── 03_aislar_backend.ps1        # desconecta el NAT de db01
+│   ├── 04_ver_adaptadores.ps1       # adaptadores de red de las VMs vistos desde VirtualBox
 │   ├── 98_revertir.ps1              # borra las VMs y sus discos
 │   ├── 99_validar.ps1               # pruebas [PASA]/[FALLA] con evidencia
 │   └── guest/                       # se ejecutan dentro de las VMs
@@ -116,7 +117,8 @@ Todos los comandos se escriben en PowerShell, dentro de la carpeta `Unidad_5\Tar
 | 3 | `powershell -ExecutionPolicy Bypass -File .\scripts\01_recursos_dinamicos.ps1 -Limite 50` | Limita la CPU de web01 al 50 % sin apagarla. `-Restaurar` la devuelve a lo normal. Con `-Cpus 1 -Memoria 1280` cambia el tamaño de la VM (se reinicia). |
 | 4 | `powershell -ExecutionPolicy Bypass -File .\scripts\02_disco_fino.ps1 -Llenar 500` | Escribe 500 MB en web01 y muestra cuánto crece el disco en Windows. |
 | 5 | `powershell -ExecutionPolicy Bypass -File .\scripts\03_aislar_backend.ps1 -Modo Aislar` | Desconecta el NAT de db01 para dejarla solo en la red interna. `-Modo Restaurar` la reconecta. |
-| 6 | `powershell -ExecutionPolicy Bypass -File .\scripts\98_revertir.ps1 -Si` | Borra todo el entorno. |
+| 6 | `powershell -ExecutionPolicy Bypass -File .\scripts\04_ver_adaptadores.ps1` | Muestra, para cada VM, el modo de cada adaptador (NAT, Solo anfitrión, Red interna, Puente), su red, su MAC y el reenvío de puertos. |
+| 7 | `powershell -ExecutionPolicy Bypass -File .\scripts\98_revertir.ps1 -Si` | Borra todo el entorno. |
 
 **Entrar a una VM:** `vagrant ssh web01` o `vagrant ssh db01`. Dentro de las VMs hay dos comandos cortos: `ver_redes` (interfaces y rutas) y, solo en web01, `probar_db` (consulta la base de datos de db01).
 

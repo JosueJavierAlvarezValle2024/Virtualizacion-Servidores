@@ -1,0 +1,86 @@
+﻿Validacion Tarea 5.2 - HPCOMPUTER18 - 2026-11-20 17:22
+
+==== 1. Estado de las maquinas ====
+[PASA]  u5-web01 esta encendida
+[PASA]  u5-db01 esta encendida
+
+==== 2. Modo NAT (web01) ====
+         Puerto del anfitrion reenviado al 80 de web01: 8088
+[PASA]  Reenvio de puertos: http://127.0.0.1:8088 responde web01
+[PASA]  web01 sale a internet (8.8.8.8) por NAT
+         default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100 
+[PASA]  La ruta por defecto de web01 es el NAT (10.0.2.2)
+
+==== 3. Modo Solo anfitrion / Host-Only (192.168.56.0/24) ====
+[PASA]  El anfitrion hace ping a web01 (192.168.56.10)
+[PASA]  El anfitrion abre http://192.168.56.10
+
+==== 4. Red interna red-backend (10.10.10.0/24) ====
+[PASA]  web01 hace ping a db01 (10.10.10.20)
+         +----+---------+---------+
+         | id | nombre  | precio  |
+         +----+---------+---------+
+         |  1 | Teclado |  350.00 |
+         |  2 | Mouse   |  180.00 |
+         |  3 | Monitor | 2400.00 |
+         +----+---------+---------+
+[PASA]  web01 consulta la base de datos de db01 (MariaDB, puerto 3306)
+         traceroute to 10.10.10.20 (10.10.10.20), 3 hops max, 60 byte packets
+          1  10.10.10.20  1.329 ms  1.569 ms  1.330 ms
+[PASA]  Traza web01 -> db01: un solo salto (mismo segmento)
+
+==== 5. Aislamiento de db01 ====
+[PASA]  El anfitrion NO alcanza a db01 (10.10.10.20): la red interna esta aislada
+[PASA]  El puerto 3306 de db01 NO es accesible desde el anfitrion
+[PASA]  El puerto 3306 NO esta abierto en web01 (host-only)
+         LISTEN 0      80       10.10.10.20:3306      0.0.0.0:*          
+[PASA]  MariaDB en db01 escucha solo en 10.10.10.20 (no en 0.0.0.0)
+         lo               UNKNOWN        127.0.0.1/8 
+         eth0             UP             10.0.2.15/24 metric 100 
+         eth1             UP             10.10.10.20/24 
+[PASA]  db01 no tiene adaptador host-only ni puente
+
+==== 6. Modo Puente / Bridged (red fisica) ====
+         Anfitrion (Wi-Fi): 192.168.100.11   segmento: 192.168.100.0/24
+         2: eth0    inet 10.0.2.15/24 metric 100 brd 10.0.2.255 scope global dynamic eth0\       valid_lft 85855sec preferred_lft 85855sec
+         3: eth1    inet 192.168.56.10/24 brd 192.168.56.255 scope global eth1\       valid_lft forever preferred_lft forever
+         4: eth2    inet 10.10.10.10/24 brd 10.10.10.255 scope global eth2\       valid_lft forever preferred_lft forever
+         5: eth3    inet 192.168.100.14/24 metric 100 brd 192.168.100.255 scope global dynamic eth3\       valid_lft 85855sec preferred_lft 85855sec
+[PASA]  web01 tiene una IP de la red fisica (192.168.100.14)
+[PASA]  web01 alcanza el router de la red fisica (192.168.100.1) por el puente
+[PASA]  El anfitrion hace ping a web01 por la red fisica (192.168.100.14)
+[PASA]  El anfitrion abre http://192.168.100.14
+
+==== 7. Trazas de ruta ====
+  Anfitrion -> web01 (host-only):
+         Traza a 192.168.56.10 sobre caminos de 3 saltos como máximo.
+           1    <1 ms    <1 ms    <1 ms  192.168.56.10 
+         Traza completa.
+[PASA]  Traza anfitrion -> web01: un salto
+  web01 -> 8.8.8.8 (sale por el NAT):
+         traceroute to 8.8.8.8 (8.8.8.8), 3 hops max, 60 byte packets
+          1  10.0.2.2  0.570 ms  0.420 ms  0.290 ms
+          2  * * *
+          3  * * *
+[PASA]  Traza web01 -> internet: el primer salto es el NAT (10.0.2.2)
+
+==== 8. Recursos: vCPU, RAM y discos con aprovisionamiento fino ====
+         u5-web01: 2 vCPU, 1024 MB de RAM
+[PASA]  u5-web01 tiene los recursos del Vagrantfile (o los ajustados con 01_recursos_dinamicos.ps1)
+         u5-db01: 1 vCPU, 1024 MB de RAM
+[PASA]  u5-db01 tiene los recursos del Vagrantfile (o los ajustados con 01_recursos_dinamicos.ps1)
+         u5-web01/datos_web.vdi: capacidad 20480 MB, ocupa 228 MB en Windows
+[PASA]  datos_web.vdi es de aprovisionamiento fino (ocupa mucho menos que su capacidad)
+         u5-db01/datos_db.vdi: capacidad 20480 MB, ocupa 28 MB en Windows
+[PASA]  datos_db.vdi es de aprovisionamiento fino (ocupa mucho menos que su capacidad)
+         Filesystem      Size  Used Avail Use% Mounted on
+         /dev/sdb         20G   24K   19G   1% /datos
+[PASA]  El disco adicional esta montado en /datos de web01
+
+==== 9. Carpeta compartida anfitrion <-> huespedes ====
+[PASA]  web01 lee el archivo creado en Windows (/compartido)
+[PASA]  db01 lee el mismo archivo (carpeta compartida con las dos VMs)
+[PASA]  Windows ve el archivo que creo web01
+
+Pruebas que pasaron:  29
+Pruebas que fallaron: 0
