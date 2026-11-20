@@ -1,0 +1,83 @@
+# -*- mode: ruby -*-
+# =============================================================================
+#  Tarea 5.2 - Entorno virtualizado con redes Bridge / NAT / Host-Only / Interna
+#  Hipervisor: VirtualBox 7.2.x  ·  Automatizacion: Vagrant 2.4.9
+#
+#  web01 (frontend) : NAT + Host-Only + Red interna + Puente (Wi-Fi)
+#  db01  (backend)  : NAT + Red interna  (aislado del anfitrion y de la LAN)
+#
+#  Uso:  vagrant up        (o  powershell scripts\00_ejecutar_todo.ps1)
+# =============================================================================
+
+# Nombre EXACTO del adaptador fisico para el modo puente.
+# Se puede cambiar sin editar el archivo:  $env:BRIDGE_IFACE = "otro nombre"
+BRIDGE_IFACE = ENV.fetch("BRIDGE_IFACE", "MediaTek MT7921 Wi-Fi 6 802.11ax PCIe Adapter")
+
+Vagrant.configure("2") do |config|
+  # Ubuntu Server 24.04 LTS con las Guest Additions ya instaladas
+  config.vm.box = "bento/ubuntu-24.04"
+  config.vm.box_check_update = false
+  config.vm.boot_timeout = 600
+
+  # Carpeta compartida anfitrion <-> huespedes: .\compartido  ->  /compartido
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder "compartido", "/compartido"
+
+  # ---------------------------------------------------------------------------
+  # web01: servidor web (frontend). Cuatro adaptadores, uno por cada modo de red.
+  # ---------------------------------------------------------------------------
+  config.vm.define "web01" do |web|
+    web.vm.hostname = "web01"
+
+    # Adaptador 1 = NAT (lo crea Vagrant). Reenvio de puertos: 8088 -> 80
+    # (el 8080 de esta laptop ya lo usa otro programa). Se puede cambiar con
+    # la variable WEB_PUERTO. Si el puerto esta ocupado, Vagrant elige otro y se
+    # consulta con:  vagrant port web01
+    web.vm.network "forwarded_port", guest: 80, host: ENV.fetch("WEB_PUERTO", "8088").to_i, host_ip: "127.0.0.1", auto_correct: true
+
+    # Adaptador 2 = Solo anfitrion (Host-Only): acceso desde Windows
+    web.vm.network "private_network", ip: "192.168.56.10"
+
+    # Adaptador 3 = Red interna "red-backend": segmento privado hacia db01
+    web.vm.network "private_network", ip: "10.10.10.10", virtualbox__intnet: "red-backend"
+
+    # Adaptador 4 = Puente (Bridged): se conecta directo a la red fisica (Wi-Fi)
+    # No toma la ruta por defecto del DHCP para que la salida siga siendo por NAT.
+    web.vm.network "public_network", bridge: BRIDGE_IFACE, use_dhcp_assigned_default_route: false
+
+    # Disco adicional de 20 GB con aprovisionamiento fino (thin provisioning)
+    web.vm.disk :disk, size: "20GB", name: "datos_web"
+
+    web.vm.provider "virtualbox" do |vb|
+      vb.name   = "u5-web01"
+      vb.cpus   = ENV.fetch("WEB_CPUS", "2").to_i
+      vb.memory = ENV.fetch("WEB_MEM", "1024").to_i
+      vb.gui    = false
+    end
+
+    web.vm.provision "shell", name: "disco",   path: "scripts/guest/disco_fino.sh"
+    web.vm.provision "shell", name: "web01",   path: "scripts/guest/aprovisionar_web.sh"
+  end
+
+  # ---------------------------------------------------------------------------
+  # db01: base de datos (backend). Solo NAT (necesario para Vagrant) y red interna.
+  # No tiene Host-Only ni Puente: Windows y la LAN no la ven.
+  # ---------------------------------------------------------------------------
+  config.vm.define "db01" do |db|
+    db.vm.hostname = "db01"
+
+    db.vm.network "private_network", ip: "10.10.10.20", virtualbox__intnet: "red-backend"
+
+    db.vm.disk :disk, size: "20GB", name: "datos_db"
+
+    db.vm.provider "virtualbox" do |vb|
+      vb.name   = "u5-db01"
+      vb.cpus   = ENV.fetch("DB_CPUS", "1").to_i
+      vb.memory = ENV.fetch("DB_MEM", "1024").to_i
+      vb.gui    = false
+    end
+
+    db.vm.provision "shell", name: "disco", path: "scripts/guest/disco_fino.sh"
+    db.vm.provision "shell", name: "db01",  path: "scripts/guest/aprovisionar_db.sh"
+  end
+end

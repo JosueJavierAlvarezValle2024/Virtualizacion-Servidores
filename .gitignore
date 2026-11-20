@@ -12,6 +12,11 @@
 *.iso
 *.ova
 .vagrant/
+*.box
+
+# Archivos que crean las pruebas de la carpeta compartida (Tarea 5.2)
+Unidad_5/Tarea_5.2/compartido/*
+!Unidad_5/Tarea_5.2/compartido/LEEME.txt
 
 # Preferencias locales de Claude (no son parte de la entrega)
 CLAUDE.md

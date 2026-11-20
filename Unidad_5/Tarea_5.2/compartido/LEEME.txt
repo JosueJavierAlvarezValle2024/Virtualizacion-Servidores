@@ -1,0 +1,5 @@
+Carpeta compartida de la Tarea 5.2
+===================================
+Esta carpeta de Windows aparece dentro de las dos maquinas virtuales como /compartido.
+Lo que guardes aqui lo ven web01 y db01, y lo que ellas guarden en /compartido
+aparece aqui. Las pruebas (99_validar.ps1) crean archivos de ejemplo en esta carpeta.
