@@ -62,10 +62,16 @@ $snaps | ForEach-Object { Linea "           - $_" }
 $tiene = $snaps -contains $SNAP_OK
 Prueba "Existe el snapshot de la tarea: '$SNAP_OK'" $tiene
 if ($tiene) {
-    $est = (& $VBOX snapshot $SERVIDOR showvminfo $SNAP_OK --machinereadable 2>$null | Select-String '^VMState="?([^"]*)"?$')
-    $estado = if ($est) { $est.Matches[0].Groups[1].Value } else { '?' }
-    Linea "         Estado guardado en el snapshot: $estado"
-    Prueba 'El snapshot es en caliente (guarda la memoria: estado saved)' ($estado -eq 'saved')
+    # Un snapshot con memoria tiene un archivo de estado (.sav) declarado en el .vbox de la VM
+    $vbox = Valor-VM $SERVIDOR 'CfgFile'
+    $nombreXml = [regex]::Escape($SNAP_OK)
+    $sav = $null
+    if ($vbox -and (Test-Path $vbox)) {
+        $m = [regex]::Match((Get-Content -Raw -Encoding UTF8 $vbox), "<Snapshot [^>]*name=`"$nombreXml`"[^>]*stateFile=`"([^`"]+)`"")
+        if ($m.Success) { $sav = Join-Path (Split-Path $vbox) $m.Groups[1].Value }
+    }
+    if ($sav -and (Test-Path $sav)) { Linea ("         Archivo de memoria del snapshot: {0} ({1:N0} MB)" -f (Split-Path $sav -Leaf), ((Get-Item $sav).Length / 1MB)) }
+    Prueba 'El snapshot guarda la memoria (tiene archivo de estado .sav)' ([bool]($sav -and (Test-Path $sav)))
 }
 
 Seccion '6. Infraestructura como codigo'

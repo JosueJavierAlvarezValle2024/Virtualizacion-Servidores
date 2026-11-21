@@ -12,6 +12,8 @@
 #  La salida tambien se guarda en evidencias/carga_cliente_<fecha>.txt
 # =============================================================================
 set -uo pipefail
+# El sistema esta en espanol (coma decimal): sin esto awk lee "0.150" como 0 y las latencias salen en 0 ms
+export LC_ALL=C
 
 N="${1:-600}"
 C="${2:-10}"

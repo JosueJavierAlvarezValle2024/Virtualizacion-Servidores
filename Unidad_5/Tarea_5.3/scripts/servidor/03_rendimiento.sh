@@ -45,7 +45,7 @@ titulo "Resumen"
 awk '
     { us+=$13; sy+=$14; id+=$15; wa+=$16; n++
       uso=100-$15; if (uso>pico) pico=uso
-      if (min=="" || $4<min) min=$4
+      if (!visto || $4+0<min) { min=$4+0; visto=1 }
       if ($9+$10>io) io=$9+$10
       if ($12>cs) cs=$12 }
     END {
