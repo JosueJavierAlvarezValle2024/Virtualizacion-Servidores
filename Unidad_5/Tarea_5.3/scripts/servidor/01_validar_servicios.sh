@@ -25,8 +25,8 @@ SALIDA="$EVID_DIR/servicios_$(date +%Y%m%d_%H%M%S).txt"
 exec > >(tee "$SALIDA") 2>&1
 
 pasaron=0; fallaron=0
-pasa()  { echo -e "${VERDE}[PASA]${NC}  $1"; ((pasaron++)); }
-falla() { echo -e "${ROJO}[FALLA]${NC} $1"; ((fallaron++)); }
+pasa()  { echo -e "${VERDE}[PASA]${NC}  $1"; pasaron=$((pasaron + 1)); }
+falla() { echo -e "${ROJO}[FALLA]${NC} $1"; fallaron=$((fallaron + 1)); }
 extra() { echo -e "${AMARILLO}[EXTRA]${NC} $1"; }
 # probar "descripcion" comando...   -> pasa si el comando termina bien
 probar() { local d="$1"; shift; if "$@" &>/dev/null; then pasa "$d"; else falla "$d"; fi; }

@@ -27,8 +27,8 @@ exec > >(tee "$SALIDA") 2>&1
 AZUL='\033[1;34m'; VERDE='\033[0;32m'; ROJO='\033[0;31m'; AMARILLO='\033[1;33m'; NC='\033[0m'
 titulo() { echo -e "\n${AZUL}==== $* ====${NC}"; }
 pasaron=0; fallaron=0
-pasa()  { echo -e "${VERDE}[PASA]${NC}  $1"; ((pasaron++)); }
-falla() { echo -e "${ROJO}[FALLA]${NC} $1"; ((fallaron++)); }
+pasa()  { echo -e "${VERDE}[PASA]${NC}  $1"; pasaron=$((pasaron + 1)); }
+falla() { echo -e "${ROJO}[FALLA]${NC} $1"; fallaron=$((fallaron + 1)); }
 extra() { echo -e "${AMARILLO}[EXTRA]${NC} $1"; }
 # esperar "descripcion" "texto" comando...   -> pasa si la salida contiene el texto
 esperar() {
@@ -69,7 +69,8 @@ esperar "www.$DOMINIO (A)" "$IP_SERVIDOR" dig +short +time=3 +tries=1 "@$IP_SERV
 esperar "ftp.$DOMINIO (CNAME -> srv01)" "srv01.$DOMINIO" dig +short +time=3 +tries=1 "@$IP_SERVIDOR" "ftp.$DOMINIO"
 esperar "Inversa de $IP_SERVIDOR (PTR)" "srv01.$DOMINIO" dig +short +time=3 +tries=1 -x "$IP_SERVIDOR" "@$IP_SERVIDOR"
 esperar "Correo del dominio (MX)" "mail.$DOMINIO" dig +short +time=3 +tries=1 "@$IP_SERVIDOR" "$DOMINIO" MX
-esperar "Reenviadores: resuelve un nombre de internet" "." dig +short +time=5 +tries=1 "@$IP_SERVIDOR" www.google.com
+externa="$(dig +short +time=5 +tries=1 "@$IP_SERVIDOR" www.google.com A 2>&1)"
+if grep -qE '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' <<< "$externa"; then pasa "Reenviadores: resuelve un nombre de internet -> $(head -n 1 <<< "$externa")"; else falla "Reenviadores: no se resolvio www.google.com (${externa:-sin respuesta})"; fi
 
 # ---------------------------------------------------------------------------
 titulo "3. Web HTTPS"
