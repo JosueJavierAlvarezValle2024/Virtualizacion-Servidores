@@ -1,0 +1,46 @@
+﻿Validacion Tarea 5.3 (infraestructura) - HPCOMPUTER18 - 2026-11-21 00:55
+
+==== 1. Hipervisor ====
+         VirtualBox 7.2.20r175154
+[PASA]  VirtualBox 7.2 o superior
+
+==== 2. Maquinas virtuales ====
+[PASA]  Existe el servidor (Xubuntuu)
+[PASA]  Existe el cliente (Cliente-U4)
+         Xubuntuu: 3787 MB de RAM, 2 vCPU, estado running
+         Cliente-U4: 2048 MB de RAM, 2 vCPU, estado running
+
+==== 3. Red virtualizada ====
+[PASA]  El servidor esta en la red interna red-u4
+[PASA]  El servidor tiene un adaptador NAT (salida a internet)
+[PASA]  El cliente esta en la red interna red-u4
+[PASA]  El cliente NO tiene adaptador NAT (solo sale por el servidor)
+[PASA]  El cliente usa la MAC reservada por el DHCP (080027818D77): 080027818D77
+
+==== 4. Almacenamiento del servidor ====
+         Discos virtuales conectados: 6
+[PASA]  El servidor tiene al menos 6 discos (sistema, datos, respaldos y 3 del RAID)
+
+==== 5. Snapshots (contingencia) ====
+         Snapshots del servidor: 5
+           - 3.1 terminada
+           - 3.2 terminada
+           - 3.3 lista
+           - Base enlazada para Xubuntuu y Cliente-U4
+           - 5.3 Servicios integrados
+[PASA]  Existe el snapshot de la tarea: '5.3 Servicios integrados'
+         Estado guardado en el snapshot: ?
+[FALLA] El snapshot es en caliente (guarda la memoria: estado saved)
+
+==== 6. Infraestructura como codigo ====
+[PASA]  Existe scripts\iac\crear_vms.ps1
+[PASA]  Existe scripts\iac\reconstruir_servidor.sh
+[PASA]  Existe scripts\servidor\01_validar_servicios.sh
+[PASA]  Existe scripts\servidor\02_fallo_controlado.sh
+[PASA]  Existe scripts\cliente\prueba_integral.sh
+[PASA]  Existe scripts\01_crear_snapshot.ps1
+[PASA]  Existe scripts\02_restaurar_snapshot.ps1
+[PASA]  Existe el manual de reconstruccion (docs\manual_reconstruccion.md)
+
+Pruebas que pasaron:  18
+Pruebas que fallaron: 1

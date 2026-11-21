@@ -8,7 +8,8 @@
 #  Uso:  powershell -ExecutionPolicy Bypass -File .\scripts\01_crear_snapshot.ps1
 #  Opcional: -Nombre "otro nombre"   -VM "otra VM"
 # =============================================================================
-param([string]$Nombre = '', [string]$VM = '')
+#  Con poca RAM, si el modo en caliente se atora, usa:  -Pausada
+param([string]$Nombre = '', [string]$VM = '', [switch]$Pausada)
 
 . (Join-Path $PSScriptRoot 'lib\comun.ps1')
 Requisitos-Base
@@ -34,8 +35,11 @@ if ($libre -lt 8) { Falla 'Hay menos de 8 GB libres: libera espacio antes de con
 Titulo "Creando el snapshot '$Nombre'"
 $desc = "Servicios integrados de la Tarea 5.3 funcionando (DHCP, DNS, HTTPS, MariaDB, FTPS/SFTP, RAID). Creado el $(Get-Date -Format 'yyyy-MM-dd HH:mm')."
 $reloj = [System.Diagnostics.Stopwatch]::StartNew()
-if ($estado -eq 'running') {
+if ($estado -eq 'running' -and -not $Pausada) {
     & $VBOX snapshot $SERVIDOR take $Nombre --description $desc --live
+} elseif ($estado -eq 'running') {
+    Info 'Modo pausado: la VM se detiene unos segundos mientras se guarda la memoria (mas fiable con poca RAM).'
+    & $VBOX snapshot $SERVIDOR take $Nombre --description $desc
 } else {
     & $VBOX snapshot $SERVIDOR take $Nombre --description $desc
 }
