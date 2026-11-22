@@ -15,7 +15,10 @@ Este proyecto integra en un ambiente virtualizado los servicios esenciales const
 | Esta guía: arquitectura, inventario, uso y contingencia | este README |
 | Manual de reconstrucción paso a paso | [docs/manual_reconstruccion.md](docs/manual_reconstruccion.md) |
 | Scripts (Windows, servidor, cliente e infraestructura como código) | [scripts/](scripts/) |
-| Salidas de las pruebas | [evidencias/](evidencias/) |
+| Salidas de las pruebas de Windows (`99_validar.ps1`) | [evidencias/](evidencias/) |
+| Memoria técnica (PDF) | [docs/ManualTecnicoTarea5.3.pdf](docs/ManualTecnicoTarea5.3.pdf) |
+
+> Las salidas del servidor y del cliente (`01_validar_servicios.sh`, `prueba_integral.sh`, `03_rendimiento.sh` y `prueba_rendimiento.sh`) se generaron dentro de las VMs y no se copiaron al repositorio: sus resultados están en las capturas de la memoria técnica y en el video.
 
 ---
 
