@@ -16,7 +16,6 @@ Este proyecto integra en un ambiente virtualizado los servicios esenciales const
 | Manual de reconstrucción paso a paso | [docs/manual_reconstruccion.md](docs/manual_reconstruccion.md) |
 | Scripts (Windows, servidor, cliente e infraestructura como código) | [scripts/](scripts/) |
 | Salidas de las pruebas | [evidencias/](evidencias/) |
-| Guion del video | [docs/guion_video.md](docs/guion_video.md) |
 
 ---
 

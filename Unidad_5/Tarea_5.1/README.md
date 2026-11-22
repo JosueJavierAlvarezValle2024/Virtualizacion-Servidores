@@ -13,7 +13,6 @@ Este documento explica qué es la virtualización, clasifica los hipervisores en
 | Script que detecta la virtualización desde dentro de una VM Linux | [scripts/detectar_virtualizacion.sh](scripts/detectar_virtualizacion.sh) |
 | Script que describe el anfitrión Windows y su hipervisor | [scripts/info_anfitrion.ps1](scripts/info_anfitrion.ps1) |
 | Salidas de los scripts | [evidencias/](evidencias/) |
-| Guion del video | [docs/guion_video.md](docs/guion_video.md) |
 
 ---
 

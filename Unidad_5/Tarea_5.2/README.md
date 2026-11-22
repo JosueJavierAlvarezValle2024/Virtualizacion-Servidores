@@ -13,7 +13,6 @@ Esta práctica despliega, con un solo comando (`vagrant up`), **dos servidores v
 | Aprovisionamiento dentro de las VMs (bash) | [scripts/guest/](scripts/guest/) |
 | Salidas de las pruebas | [evidencias/](evidencias/) |
 | Carpeta compartida con las VMs | [compartido/](compartido/) |
-| Guion del video | [docs/guion_video.md](docs/guion_video.md) |
 
 ---
 
@@ -99,7 +98,7 @@ Unidad_5/Tarea_5.2/
 │       ├── aprovisionar_web.sh
 │       └── aprovisionar_db.sh
 ├── evidencias/                      # salidas de 99_validar.ps1
-└── docs/                            # reporte y guion_video.md
+└── docs/                            # reporte
 ```
 
 ---
